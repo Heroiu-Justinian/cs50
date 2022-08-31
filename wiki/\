@@ -1,0 +1,25 @@
+from django.shortcuts import render
+from django import forms
+from . import util
+import markdown as md
+
+class SearchForm(forms.Form):
+        task = forms.CharField()
+
+        def __init__(self, *args, **kwargs):
+            super(ExampleForm, self).__init__(*args, **kwargs)
+def index(request):
+    context = {
+            'entries' : util.list_entries(),
+            'form' : SearchForm()
+            }
+    return render(request, "encyclopedia/index.html", context)
+
+def display_title(request,title):
+    """ display a title by name """
+    entry = md.markdown(util.get_entry(title))
+    context = {
+             'entry': entry,
+             'form' : SearchForm()
+             }
+    return render(request,'encyclopedia/entry.html',context)
